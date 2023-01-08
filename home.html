@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Check Json</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script>
+      $(() => {
+        // function will get executed
+        // on click of submit button
+        $("#submitButton").click(function (ev) {
+          alert("something");
+
+          var obj = {
+            rollNumber: $("#rollNumber").val(),
+            name: $("#name").val(),
+            age: $("#age").val(),
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "/mywebservice/schoolService/StudentService/addStudent",
+            data: JSON.stringify(obj),
+            contentType: "application/json",
+
+            success: function (data) {
+              // Ajax call completed successfully
+              alert("Form Submitted Successfully");
+            },
+            error: function (data) {
+              // Some error in ajax call
+              alert("some Error" + data);
+            },
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Student Service</h1>
+    <a href="addStudent.html">Add Student</a><br />
+    <a href="deleteStudent.html">Delete Student</a><br />
+    <a href="updateStudent.html">Update Student</a><br />
+    <a href="getAll.html">Get all Student</a><br />
+    <a href="deleteStudent.html">Delete Student</a>
+  </body>
+</html>

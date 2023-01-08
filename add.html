@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html land="en">
+  <head>
+    <title>HR Application</title>
+    <script>
+      function validateForm(frm) {
+        return true;
+      }
+      function cancelAddition() {
+        document.getElementById("cancelAdditionForm").submit();
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Main container starts here -->
+    <div style="width: 90hw; height: auto; border: 1px solid black">
+      <!-- header starts here -->
+      <div
+        style="margin: 5px; width: 90hw; height: auto; border: 1px solid black"
+      >
+        <img src="/styleone/images/logo.png" style="float: left" />
+        <div style="margin-top: 15px; margin-bottom: 15px; font-size: 20pt">
+          HR APPLICATION
+        </div>
+      </div>
+      <!-- header ends here -->
+      <!-- content-section starts here -->
+      <div
+        style="width: 90hw; height: 70vh; margin: 5px; border: 1px solid white"
+      >
+        <!-- right panel starts here -->
+        <div
+          style="
+            height: 65vh;
+            margin-left: 105px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            padding: 5px;
+            border: 1px solid black;
+          "
+        >
+          <h2>Designation (Add Module)</h2>
+          <form
+            action="/mywebservice/schoolService/StudentService/editStudent"
+            onSubmit="return validateForm(this)"
+          >
+            Roll number 1
+            <input
+              type="text"
+              id="title"
+              name="rollNumber1"
+              maxlength="35"
+              size="36"
+            /><br />
+            Roll number 2
+            <input
+              type="text"
+              id="title"
+              name="rollNumber2"
+              maxlength="35"
+              size="36"
+            /><br />
+
+            <button type="submit">Add</button>
+            <button type="Button" onclick="cancelAddition()">Cancel</button>
+          </form>
+        </div>
+        <!-- right panel ends here -->
+      </div>
+      <!-- content-section ends here -->
+      <!-- footer starts here -->
+      <div
+        style="
+          width: 90hw;
+          height: auto;
+          margin: 5px;
+          text-align: center;
+          border: 1px solid white;
+        "
+      >
+        &copy; HR APPLICATION 2021
+      </div>
+      <!-- footer ends here -->
+    </div>
+    <!-- Main container ends here -->
+
+    <form id="cancelAdditionForm" action="/styleone/designationsView"></form>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Check Json</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="js/studentService.js"></script>
+    <script>
+      window.onload = function () {
+        $(() => {
+          var p = new StudentService().getAllStudent();
+          p.then(
+            function (data) {
+              alert(data);
+              var serviceResponse = JSON.parse(data);
+              //var serviceResponse=data;
+              if (serviceResponse.isSuccess == true) {
+                for (let i = 0; i < serviceResponse.result.length; i++) {
+                  var add = "<tr>";
+                  add =
+                    add +
+                    "<td>" +
+                    serviceResponse.result[i].rollNumber +
+                    "</td>";
+                  add = add + "<td>" + serviceResponse.result[i].name + "</td>";
+                  add = add + "<td>" + serviceResponse.result[i].age + "</td>";
+                  add = add + "</tr>";
+                  $("#our_table").append(add);
+                }
+              } else {
+                alert(serviceResponse.exception);
+              }
+            },
+            function (error) {
+              alert(error);
+            }
+          );
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Students</h1>
+    <table id="our_table">
+      <thead>
+        <tr>
+          <th>rollNumber</th>
+          <th>name</th>
+          <th>age</th>
+        </tr>
+      </thead>
+
+      <tbody id="tb_table"></tbody>
+    </table>
+  </body>
+</html>

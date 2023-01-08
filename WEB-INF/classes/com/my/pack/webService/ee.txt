@@ -1,0 +1,29 @@
+//populating onStartupMethods
+this.onStartupMethods=new LinkedList<Service>();
+methods=clazz.getDeclaredMethods();
+for(Method method : methods)
+{
+onStartupAnnotation=(OnStartup)method.getAnnotation(OnStartup.class);
+System.out.println("Priority "+onStartupAnnotation.priority());
+if(onStartupAnnotation!=null && onStartupAnnotation.priority()>0)
+{
+Service service=new Service();
+service.setServiceClass(clazz);
+service.setServiceMethod(method);
+service.setRunOnStart(true);
+service.setPriority(onStartupAnnotation.priority());
+System.out.println("adding "+onStartupAnnotation.priority());
+this.onStartupMethods.add(service);
+}
+
+}//method loop ends
+
+}//class Loop ends
+System.out.println("before sorting");
+//sorting onStartupMethods on base of priority 
+Collections.sort(onStartupMethods,new Comparator<Service>(){
+public int compare(Service s1,Service s2) 
+{
+return s1.getPriority() - s2.getPriority();
+}
+});

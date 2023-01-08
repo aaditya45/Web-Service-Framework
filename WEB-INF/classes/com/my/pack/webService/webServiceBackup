@@ -1,0 +1,127 @@
+package com.my.pack.webService;
+import com.my.pack.webService.annotations.*;
+import com.my.pack.webService.pojo.*;
+import com.my.pack.webService.model.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
+import java.lang.reflect.*;
+import java.lang.annotation.*;
+import com.my.pack.webService.annotations.*;
+
+public class MYWebService extends HttpServlet
+{
+public void doGet(HttpServletRequest request,HttpServletResponse response)
+{
+try
+{
+request.setAttribute("nnumberrr",new Integer(256));
+request.setAttribute("myyNamee","Hello  Attribute");
+bobby.test.Student ss=new bobby.test.Student(11,"Harsh",21);
+getServletContext().setAttribute("Stud",ss);
+
+
+
+ServletContext servletContext=getServletContext();
+WebServiceModel webServiceModel=(WebServiceModel)servletContext.getAttribute("webServiceModel");
+
+String requestUrl=request.getRequestURI();
+String key=requestUrl.substring(requestUrl.indexOf(request.getServletPath())+request.getServletPath().length(),request.getRequestURI().length());
+System.out.println(key);
+
+HashMap<String,Service> map=webServiceModel.getServiceMap();
+Service service=map.get(key);
+System.out.println(service);
+Class clazz=service.getServiceClass();
+Method method=service.getServiceMethod();
+Object O=clazz.newInstance();
+
+//calling inject func
+
+if(service.getInjectSessionScope())
+{
+Method setSessionScope=clazz.getMethod("setSessionScope",SessionScope.class);
+setSessionScope.invoke(O,new SessionScope(request.getSession()));
+}
+
+if(service.getInjectApplicationScope())
+{
+Method setApplicationScope=clazz.getMethod("setApplicationScope",ApplicationScope.class);
+setApplicationScope.invoke(O,new ApplicationScope(getServletContext()));
+}
+
+if(service.getInjectRequestScope())
+{
+Method setRequestScope=clazz.getMethod("setRequestScope",RequestScope.class);
+setRequestScope.invoke(O,new RequestScope(request));
+}
+
+if(service.getInjectApplicationDirectory())
+{
+//have to do
+}
+
+//inje ends here
+
+//auto wired prop
+List<AutoWiredService> autoWiredList=service.getAutoWiredList();
+String autoWiredAttributeName;
+Class autoWiredAttributeType;
+Field autoWiredAttributeField;
+Object requestObject;
+Object sessionScopeObject;
+Object applicationScopeObject;
+Method autoWiredMethod;
+for(AutoWiredService autoWiredService : autoWiredList)
+{
+autoWiredAttributeName=autoWiredService.getName();
+autoWiredAttributeField=autoWiredService.getAutoWiredField();
+autoWiredAttributeType=autoWiredAttributeField.getType();
+
+System.out.println(autoWiredAttributeName);
+System.out.println(autoWiredAttributeType);
+System.out.println(autoWiredAttributeField);
+requestObject=request.getAttribute(autoWiredAttributeName);
+sessionScopeObject=request.getSession().getAttribute(autoWiredAttributeName);
+applicationScopeObject=getServletContext().getAttribute(autoWiredAttributeName);
+
+if(requestObject!=null && autoWiredAttributeType.isInstance(requestObject))
+{
+autoWiredMethod=clazz.getMethod("set"+autoWiredAttributeField.getName(),autoWiredAttributeType);
+autoWiredMethod.invoke(O,requestObject);
+}
+else if(sessionScopeObject!=null && autoWiredAttributeType.isInstance(sessionScopeObject))
+{
+autoWiredMethod=clazz.getMethod("set"+autoWiredAttributeField.getName(),autoWiredAttributeType);
+autoWiredMethod.invoke(O,sessionScopeObject);
+}
+else if(applicationScopeObject!=null && autoWiredAttributeType.isInstance(applicationScopeObject))
+{
+autoWiredMethod=clazz.getMethod("set"+autoWiredAttributeField.getName(),autoWiredAttributeType);
+autoWiredMethod.invoke(O,applicationScopeObject);
+}
+
+System.out.println("__________________________");
+
+
+}//list loop ends
+
+
+
+//auto wired ends
+
+//calling method
+	bobby.test.Student student=new bobby.test.Student();
+method.invoke(O,student);
+}catch(Exception e)
+{
+System.out.println(e);
+}
+}//function ends
+
+public void doPost(HttpServletRequest request,HttpServletResponse response)
+{
+}//function ends
+
+}//class ends
